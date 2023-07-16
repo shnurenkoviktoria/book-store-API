@@ -96,7 +96,7 @@ WSGI_APPLICATION = "homework_20_api.wsgi.application"
 DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=True)}
 
 
-# Password validation
+# Password validatio
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
