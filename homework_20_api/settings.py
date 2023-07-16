@@ -92,11 +92,19 @@ WSGI_APPLICATION = "homework_20_api.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "dfn597dfq75llq",
+        "USER": "hiemhcewpcitjp",
+        "PASSWORD": "984a62a9182a21af14c0b9575e33e3d0572cf77a1d3b677cdbd5f416bee9e31d",
+        "HOST": "ec2-3-210-173-88.compute-1.amazonaws.com",
+        "PORT": "5432",
+    }
+}
 
-DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=True)}
 
-
-# Password validatio
+# Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
