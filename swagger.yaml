@@ -1,0 +1,211 @@
+openapi: 3.0.3
+info:
+  title: Книгарня API
+  description: API для управління книгами та авторами у книгарні
+  version: 1.0.0
+servers:
+  - url: https://cryptic-garden-19358-66c5851b2ced.herokuapp.com/api
+tags:
+  - name: books
+    description: Операції з книгами
+  - name: authors
+    description: Операції з авторами
+paths:
+  /books/:
+    get:
+      tags:
+        - books
+      summary: Отримати список книг
+      description: Отримати список всіх книг у книгарні
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /books/create:
+    post:
+      tags:
+        - books
+      summary: Додати нову книгу
+      description: Додати нову книгу до книгарні
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201':
+          description: Книга створена успішно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /books/{id}:
+    get:
+      tags:
+        - books
+      summary: Отримати деталі книги
+      description: Отримати деталі конкретної книги за її ідентифікатором
+      parameters:
+        - name: id
+          in: path
+          description: Ідентифікатор книги
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Книга не знайдена
+  /books/update/{id}:
+    put:
+      tags:
+        - books
+      summary: Оновити книгу
+      description: Оновити існуючу книгу за її ідентифікатором
+      parameters:
+        - name: id
+          in: path
+          description: Ідентифікатор книги
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '200':
+          description: Книга оновлена успішно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Книга не знайдена
+  /books/delete/{id}:
+    delete:
+      tags:
+        - books
+      summary: Видалити книгу
+      description: Видалити книгу за її ідентифікатором
+      parameters:
+        - name: id
+          in: path
+          description: Ідентифікатор книги
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Книга видалена успішно
+        '404':
+          description: Книга не знайдена
+  /authors:
+    get:
+      tags:
+        - authors
+      summary: Отримати список авторів
+      description: Отримати список всіх авторів у книгарні
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Author'
+  /authors/create:
+    post:
+      tags:
+        - authors
+      summary: Додати нового автора
+      description: Додати нового автора до книгарні
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorInput'
+      responses:
+        '201':
+          description: Автор створений успішно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+  /authors/{id}:
+    get:
+      tags:
+        - authors
+      summary: Отримати деталі автора
+      description: Отримати деталі конкретного автора за його ідентифікатором
+      parameters:
+        - name: id
+          in: path
+          description: Ідентифікатор автора
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Автор не знайдений
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          $ref: '#/components/schemas/Author'
+        genre:
+          type: string
+        publication_date:
+          type: string
+          format: date
+    BookInput:
+      type: object
+      properties:
+        title:
+          type: string
+        authorId:
+          type: integer
+        genre:
+          type: string
+        publication_date:
+          type: string
+          format: date
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    AuthorInput:
+      type: object
+      properties:
+        name:
+          type: string
