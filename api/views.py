@@ -26,6 +26,16 @@ class AuthorDetail(generics.RetrieveAPIView):
     serializer_class = AuthorSerializer
 
 
+class AuthorUpdate(generics.UpdateAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+
+class AuthorDelete(generics.DestroyAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+
 class BookList(generics.ListAPIView):
     serializer_class = BookSerializer
 

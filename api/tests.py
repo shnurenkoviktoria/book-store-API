@@ -70,3 +70,28 @@ class BookTests(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], "John Doe")
+
+    def test_update_author(self):
+        url = reverse("author-update", kwargs={"pk": self.author.pk})
+        data = {
+            "name": "Jane Doe",
+        }
+        response = self.client.put(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Author.objects.get(pk=self.author.pk).name, "Jane Doe")
+
+    def test_create_author(self):
+        url = reverse("authors-create")
+        data = {
+            "name": "Jane Doe",
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Author.objects.count(), 2)
+        self.assertEqual(Author.objects.get(name="Jane Doe").name, "Jane Doe")
+
+    def test_delete_author(self):
+        url = reverse("author-delete", kwargs={"pk": self.author.pk})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Author.objects.count(), 0)

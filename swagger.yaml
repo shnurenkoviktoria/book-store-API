@@ -196,6 +196,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/Author'
         '404':
+          description: Автор не
+  /authors/update/{id}/:
+    put:
+      tags:
+        - authors
+      summary: Оновити автора
+      description: Оновити існуючого автора за його ідентифікатором
+      parameters:
+        - name: id
+          in: path
+          description: Ідентифікатор автора
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorInput'
+      responses:
+        '200':
+          description: Автор оновлений успішно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+        '404':
+          description: Автор не знайдений
+  /authors/delete/{id}:
+    delete:
+      tags:
+        - authors
+      summary: Видалити автора
+      description: Видалити автора за його ідентифікатором
+      parameters:
+        - name: id
+          in: path
+          description: Ідентифікатор автора
+          required: true
+          schema:
+              type: integer
+      responses:
+        '204':
+          description: Автор видалений успішно
+        '404':
           description: Автор не знайдений
 components:
   schemas:
