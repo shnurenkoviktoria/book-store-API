@@ -11,6 +11,10 @@ urlpatterns = [
     path("authors/create/", views.AuthorCreate.as_view(), name="authors-create"),
     path("authors/", views.AuthorList.as_view(), name="author-list"),
     path("authors/<int:pk>/", views.AuthorDetail.as_view(), name="author-detail"),
-    path("authors/update/<int:pk>/", views.AuthorUpdate.as_view(), name="author-update"),
-    path("authors/delete/<int:pk>/", views.AuthorDelete.as_view(), name="author-delete"),
+    path(
+        "authors/update/<int:pk>/", views.AuthorUpdate.as_view(), name="author-update"
+    ),
+    path(
+        "authors/delete/<int:pk>/", views.AuthorDelete.as_view(), name="author-delete"
+    ),
 ]

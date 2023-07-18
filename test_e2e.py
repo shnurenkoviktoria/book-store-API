@@ -25,12 +25,12 @@ class TestBookAPI(unittest.TestCase):
         requests.delete(url)
 
     def test_create_book(self):
-        self.assertEquals(self.response.status_code, 201)
+        self.assertEqual(self.response.status_code, 201)
         self.assertTrue("id" in self.response.json())
-        self.assertEquals(self.response.json()["title"], self.data["title"])
-        self.assertEquals(self.response.json()["author"], self.data["author"])
-        self.assertEquals(self.response.json()["genre"], self.data["genre"])
-        self.assertEquals(
+        self.assertEqual(self.response.json()["title"], self.data["title"])
+        self.assertEqual(self.response.json()["author"], self.data["author"])
+        self.assertEqual(self.response.json()["genre"], self.data["genre"])
+        self.assertEqual(
             self.response.json()["publication_date"], self.data["publication_date"]
         )
         self.delete()
@@ -38,19 +38,15 @@ class TestBookAPI(unittest.TestCase):
     def test_get_book_list(self):
         url = urls("books/")
         response = requests.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(
-            len(response.json()) > 0
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.json()) > 0)
         self.delete()
 
     def test_get_book_detail(self):
         url = urls(f"books/{self.book_id}/")
         response = requests.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(
-            response.json()["id"], self.book_id
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], self.book_id)
         self.delete()
 
     def test_update_book(self):
@@ -63,11 +59,11 @@ class TestBookAPI(unittest.TestCase):
             "publication_date": "1925-04-10",
         }
         response = requests.put(url, json=data, headers=headers)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.json()["title"], data["title"])
-        self.assertEquals(response.json()["author"], data["author"])
-        self.assertEquals(response.json()["genre"], data["genre"])
-        self.assertEquals(
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["title"], data["title"])
+        self.assertEqual(response.json()["author"], data["author"])
+        self.assertEqual(response.json()["genre"], data["genre"])
+        self.assertEqual(
             response.json()["publication_date"], self.data["publication_date"]
         )
         self.delete()
@@ -75,8 +71,8 @@ class TestBookAPI(unittest.TestCase):
     def test_delete_book(self):
         url = urls(f"books/delete/{self.book_id}/")
         response = requests.delete(url)
-        self.assertEquals(response.status_code, 204)
-        self.assertEquals(response.text, "")
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.text, "")
 
 
 class TestAuthorAPI(unittest.TestCase):
@@ -94,25 +90,23 @@ class TestAuthorAPI(unittest.TestCase):
         requests.delete(url)
 
     def test_create_author(self):
-        self.assertEquals(self.response.status_code, 201)
+        self.assertEqual(self.response.status_code, 201)
         self.assertTrue("id" in self.response.json())
-        self.assertEquals(self.response.json()["name"], self.data["name"])
+        self.assertEqual(self.response.json()["name"], self.data["name"])
         self.delete()
 
     def test_get_author_list(self):
         url = urls("authors/")
         response = requests.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertTrue(
-            len(response.json()) > 0
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(len(response.json()) > 0)
         self.delete()
 
     def test_get_author_detail(self):
         url = urls(f"authors/{self.author_id}/")
         response = requests.get(url)
-        assert response.status_code == 200
-        assert response.json()["id"] == self.author_id
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], self.author_id)
         self.delete()
 
     def test_update_author(self):
@@ -122,12 +116,12 @@ class TestAuthorAPI(unittest.TestCase):
             "name": "F. Scott",
         }
         response = requests.put(url, json=data, headers=headers)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.json()["name"], data["name"])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["name"], data["name"])
         self.delete()
 
     def test_delete_author(self):
         url = urls(f"authors/delete/{self.author_id}/")
         response = requests.delete(url)
-        assert response.status_code == 204
-        assert response.text == ""
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.text, "")
