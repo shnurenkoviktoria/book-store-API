@@ -5,8 +5,14 @@ from api.serializers import AuthorSerializer, BookSerializer
 
 
 class AuthorList(generics.ListAPIView):
-    queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+
+    def get_queryset(self):
+        queryset = Author.objects.all()
+        name = self.request.query_params.get("name")
+        queryset = queryset.filter(title__icontains=name)
+
+        return queryset
 
 
 class AuthorCreate(generics.CreateAPIView):

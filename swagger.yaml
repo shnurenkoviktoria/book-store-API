@@ -17,6 +17,28 @@ paths:
         - books
       summary: Отримати список книг
       description: Отримати список всіх книг у книгарні
+      parameters:
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: genre
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: publication_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: author
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
@@ -26,7 +48,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
-  /books/create:
+  /books/create/:
     post:
       tags:
         - books
@@ -67,7 +89,7 @@ paths:
                 $ref: '#/components/schemas/Book'
         '404':
           description: Книга не знайдена
-  /books/update/{id}:
+  /books/update/{id}/:
     put:
       tags:
         - books
@@ -119,6 +141,12 @@ paths:
         - authors
       summary: Отримати список авторів
       description: Отримати список всіх авторів у книгарні
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -128,7 +156,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Author'
-  /authors/create:
+  /authors/create/:
     post:
       tags:
         - authors
@@ -190,7 +218,7 @@ components:
       properties:
         title:
           type: string
-        authorId:
+        author:
           type: integer
         genre:
           type: string
