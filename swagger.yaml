@@ -16,7 +16,7 @@ paths:
       tags:
         - books
       summary: Отримати список книг
-      description: Отримати список всіх книг у книгарні
+      description: Отримати список всіх книг у книгарні або книг, що відповідають заданим параметрам
       parameters:
         - name: title
           in: query
@@ -140,7 +140,7 @@ paths:
       tags:
         - authors
       summary: Отримати список авторів
-      description: Отримати список всіх авторів у книгарні
+      description: Отримати список всіх авторів у книгарні або авторів, що відповідають заданим параметрам
       parameters:
         - name: name
           in: query
