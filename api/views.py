@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import generics
 
 from api.models import Author, Book
@@ -7,6 +9,7 @@ from api.serializers import AuthorSerializer, BookSerializer
 class AuthorList(generics.ListAPIView):
     serializer_class = AuthorSerializer
 
+    @method_decorator(cache_page(60 * 15))
     def get_queryset(self):
         queryset = Author.objects.all()
         name = self.request.query_params.get("name")
@@ -39,6 +42,7 @@ class AuthorDelete(generics.DestroyAPIView):
 class BookList(generics.ListAPIView):
     serializer_class = BookSerializer
 
+    @method_decorator(cache_page(60 * 15))
     def get_queryset(self):
         queryset = Book.objects.all()
         title = self.request.query_params.get("title")
