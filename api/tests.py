@@ -1,12 +1,13 @@
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 
 from api.models import Author, Book
 
 
 class BookTests(APITestCase):
     def setUp(self):
+        self.client = APIClient()
         self.author = Author.objects.create(name="John Doe")
         self.book = Book.objects.create(
             title="Book 1",
