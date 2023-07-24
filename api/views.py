@@ -1,6 +1,7 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import generics
+from rest_framework.response import Response
 
 from api.models import Author, Book
 from api.serializers import AuthorSerializer, BookSerializer
@@ -16,7 +17,8 @@ class AuthorList(generics.ListAPIView):
         if name:
             queryset = queryset.filter(name__icontains=name)
 
-        return queryset
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 
 class AuthorCreate(generics.CreateAPIView):
@@ -56,7 +58,8 @@ class BookList(generics.ListAPIView):
         if genre:
             queryset = queryset.filter(genre__icontains=genre)
 
-        return queryset
+        serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
 
 
 class BookDetail(generics.RetrieveAPIView):
