@@ -10,7 +10,7 @@ class AuthorList(generics.ListAPIView):
     serializer_class = AuthorSerializer
 
     @method_decorator(cache_page(60 * 15))
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         queryset = Author.objects.all()
         name = self.request.query_params.get("name")
         if name:
@@ -43,7 +43,7 @@ class BookList(generics.ListAPIView):
     serializer_class = BookSerializer
 
     @method_decorator(cache_page(60 * 15))
-    def get_queryset(self):
+    def get(self, request, *args, **kwargs):
         queryset = Book.objects.all()
         title = self.request.query_params.get("title")
         author = self.request.query_params.get("author")
