@@ -2,12 +2,29 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import generics
 from rest_framework.response import Response
-
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth.models import User
+from api.permissions import IsAuthenticatedOrReadOnly
 from api.models import Author, Book
-from api.serializers import AuthorSerializer, BookSerializer
+from api.serializers import (
+    AuthorSerializer,
+    BookSerializer,
+    UserRegistrationSerializer,
+    CustomTokenObtainPairSerializer,
+)
+
+
+class UserRegistrationView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegistrationSerializer
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 class AuthorList(generics.ListAPIView):
+    queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
     @method_decorator(cache_page(60 * 15))
@@ -24,6 +41,7 @@ class AuthorList(generics.ListAPIView):
 class AuthorCreate(generics.CreateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AuthorDetail(generics.RetrieveAPIView):
@@ -34,14 +52,17 @@ class AuthorDetail(generics.RetrieveAPIView):
 class AuthorUpdate(generics.UpdateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class AuthorDelete(generics.DestroyAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookList(generics.ListAPIView):
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
 
     @method_decorator(cache_page(60 * 15))
@@ -70,15 +91,18 @@ class BookDetail(generics.RetrieveAPIView):
 class BookCreate(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookUpdate(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     lookup_url_kwarg = "pk"
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class BookDelete(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     lookup_url_kwarg = "pk"
+    permission_classes = [IsAuthenticatedOrReadOnly]

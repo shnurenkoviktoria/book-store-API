@@ -17,4 +17,10 @@ urlpatterns = [
     path(
         "authors/delete/<int:pk>/", views.AuthorDelete.as_view(), name="author-delete"
     ),
+    path("users/register/", views.UserRegistrationView.as_view(), name="user-register"),
+    path(
+        "users/token/",
+        views.CustomTokenObtainPairView.as_view(),
+        name="token_obtain_pair",
+    ),
 ]

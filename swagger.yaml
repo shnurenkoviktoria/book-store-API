@@ -5,6 +5,7 @@ info:
   version: 1.0.0
 servers:
   - url: https://cryptic-garden-19358-66c5851b2ced.herokuapp.com/api
+  - url: http://127.0.0.1:8000/api
 tags:
   - name: books
     description: Операції з книгами
@@ -50,6 +51,8 @@ paths:
                   $ref: '#/components/schemas/Book'
   /books/create/:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - books
       summary: Додати нову книгу
@@ -91,6 +94,8 @@ paths:
           description: Книга не знайдена
   /books/update/{id}/:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - books
       summary: Оновити книгу
@@ -119,6 +124,8 @@ paths:
           description: Книга не знайдена
   /books/delete/{id}:
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - books
       summary: Видалити книгу
@@ -158,6 +165,8 @@ paths:
                   $ref: '#/components/schemas/Author'
   /authors/create/:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - authors
       summary: Додати нового автора
@@ -199,6 +208,8 @@ paths:
           description: Автор не
   /authors/update/{id}/:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - authors
       summary: Оновити автора
@@ -227,6 +238,8 @@ paths:
           description: Автор не знайдений
   /authors/delete/{id}:
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - authors
       summary: Видалити автора
@@ -283,3 +296,8 @@ components:
       properties:
         name:
           type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

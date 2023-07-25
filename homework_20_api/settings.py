@@ -38,7 +38,7 @@ if not IS_HEROKU_APP:
 if IS_HEROKU_APP:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = ["0.0.0.0"]
+    ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 DEBUG = True
 # Application definition
 
@@ -48,6 +48,8 @@ DEBUG = True
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "rest_framework",
+    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -167,6 +169,12 @@ if "DOCKER_APP" in os.environ:
             "LOCATION": "redis://redis:6379/",
         }
     }
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+}
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

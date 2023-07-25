@@ -1,6 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 
 from api.models import Author, Book
 
@@ -15,6 +17,11 @@ class BookTests(APITestCase):
             genre="Fiction",
             publication_date="2022-01-01",
         )
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+        self.token = Token.objects.create(user=self.user)
+        self.client.force_authenticate(user=self.user)
 
     def test_get_all_books(self):
         url = reverse("book-list")
