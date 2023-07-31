@@ -1,6 +1,7 @@
 from django.urls import path
 
 from api import views
+from api.views import OrderView, OrderCallbackView, OrdersViewSet
 
 urlpatterns = [
     path("books/", views.BookList.as_view(), name="book-list"),
@@ -23,4 +24,6 @@ urlpatterns = [
         views.CustomTokenObtainPairView.as_view(),
         name="token_obtain_pair",
     ),
+    path("order/", OrderView.as_view()),
+    path("monobank/callback", OrderCallbackView.as_view(), name="mono_callback"),
 ]

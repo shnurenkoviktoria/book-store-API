@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from api.models import Author, Book
+from api.models import Author, Book, Order
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -51,3 +51,26 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["email"] = self.user.email
 
         return data
+
+
+class OrderContentSerializer(serializers.Serializer):
+    book_id = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
+    quantity = serializers.IntegerField()
+
+
+class OrderSerializer(serializers.Serializer):
+    order = OrderContentSerializer(many=True, allow_empty=False)
+
+
+class OrderModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ["total_price", "created_at", "invoice_id", "id", "books", "status"]
+
+
+class MonoCallbackSerializer(serializers.Serializer):
+    invoiceId = serializers.CharField()
+    status = serializers.CharField()
+    amount = serializers.IntegerField()
+    ccy = serializers.IntegerField()
+    reference = serializers.CharField()
