@@ -150,7 +150,10 @@ class OrderCallbackView(views.APIView):
             return Response({"status": "invoiceId mismatch"}, status=400)
         order.status = callback.validated_data["status"]
         order.save()
+        bookId = order.book.id
+        book = Book.objects.get(id=bookId)
         if order.status == "success":
-            order["book_id"].quantity -= order.quantity
-            order.book.save()
+            book.quantity -= order.quantity
+            book.save()
+
         return Response({"status": "ok"})
