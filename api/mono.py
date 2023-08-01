@@ -13,24 +13,28 @@ def create_order(order_data, webhook_url):
     order_items = []
     amount = 0
     order = Order.objects.create(total_price=0)
-
     for order_item in order_data:
-        item_sum = order_item["book_id"].price * order_item["quantity"]
-        basketOrder.append(
-            {
-                "name": order_item["book_id"].title,
-                "qty": order_item["quantity"],
-                "sum": item_sum,
-                "unit": "шт.",
-            }
-        )
-        item = OrderItem.objects.create(
-            book=order_item["book_id"], order=order, quantity=order_item["quantity"]
-        )
-        order_items.append(item)
-        amount += item_sum
-    order.total_price = amount
-    order.save()
+        if order_item["quantity"] > order_item["book_id"].quantity:
+            raise ValueError("Not enough books in stock")
+        else:
+            order_item["book_id"].quantity -= order_item["quantity"]
+            order_item["book_id"].save()
+            item_sum = order_item["book_id"].price * order_item["quantity"]
+            basketOrder.append(
+                {
+                    "name": order_item["book_id"].title,
+                    "qty": order_item["quantity"],
+                    "sum": item_sum,
+                    "unit": "шт.",
+                }
+            )
+            item = OrderItem.objects.create(
+                book=order_item["book_id"], order=order, quantity=order_item["quantity"]
+            )
+            order_items.append(item)
+            amount += item_sum
+        order.total_price = amount
+        order.save()
 
     body = {
         "amount": amount,
