@@ -26,4 +26,5 @@ urlpatterns = [
     ),
     path("order/", OrderView.as_view()),
     path("monobank/callback", OrderCallbackView.as_view(), name="mono_callback"),
+    path("orders/", OrdersViewSet.as_view({"get": "list"})),
 ]
