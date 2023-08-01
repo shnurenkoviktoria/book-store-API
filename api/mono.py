@@ -17,8 +17,6 @@ def create_order(order_data, webhook_url):
         if order_item["quantity"] > order_item["book_id"].quantity:
             raise ValueError("Not enough books in stock")
         else:
-            order_item["book_id"].quantity -= order_item["quantity"]
-            order_item["book_id"].save()
             item_sum = order_item["book_id"].price * order_item["quantity"]
             basketOrder.append(
                 {
