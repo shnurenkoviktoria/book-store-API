@@ -17,6 +17,7 @@ from api.serializers import (
     OrderModelSerializer,
     OrderSerializer,
     MonoCallbackSerializer,
+    OrderContentSerializer,
 )
 
 
@@ -150,10 +151,11 @@ class OrderCallbackView(views.APIView):
             return Response({"status": "invoiceId mismatch"}, status=400)
         order.status = callback.validated_data["status"]
         order.save()
-        bookId = order.book.id
-        book = Book.objects.get(id=bookId)
-        if order.status == "success":
-            book.quantity -= order.quantity
+        orderitem = OrderContentSerializer(data=order.order)
+        book = Book.objects.get(id=orderitem.validated_data["book"])
+        if order.status != "success":
+            gty = orderitem.quantity + book.quantity
+            book.quantity = gty
             book.save()
 
         return Response({"status": "ok"})
