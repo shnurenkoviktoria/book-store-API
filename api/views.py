@@ -151,6 +151,6 @@ class OrderCallbackView(views.APIView):
         order.status = callback.validated_data["status"]
         order.save()
         if order.status == "success":
-            order.book.quantity -= order.quantity
+            order["book_id"].quantity -= order.quantity
             order.book.save()
         return Response({"status": "ok"})
