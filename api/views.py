@@ -153,7 +153,12 @@ class OrderCallbackView(views.APIView):
         id_order = order.id
         id = OrderItem.objects.get(id=id_order)
         book = Book.objects.get(id=id.book_id)
-        if order.status == "failure" or order.status == "expired" or order.status == "reversed" or order.status == "hold":
+        if (
+            order.status == "failure"
+            or order.status == "expired"
+            or order.status == "reversed"
+            or order.status == "hold"
+        ):
             book.quantity += id.quantity
             book.save()
 
