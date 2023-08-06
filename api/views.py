@@ -77,6 +77,9 @@ class BookList(generics.ListAPIView):
         title = self.request.query_params.get("title")
         author = self.request.query_params.get("author")
         genre = self.request.query_params.get("genre")
+        publication_date = self.request.query_params.get("publication_date")
+        price = self.request.query_params.get("price")
+        quantity = self.request.query_params.get("quantity")
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -84,6 +87,12 @@ class BookList(generics.ListAPIView):
             queryset = queryset.filter(author__name__icontains=author)
         if genre:
             queryset = queryset.filter(genre__icontains=genre)
+        if publication_date:
+            queryset = queryset.filter(publication_date__icontains=publication_date)
+        if price:
+            queryset = queryset.filter(price__icontains=price)
+        if quantity:
+            queryset = queryset.filter(quantity__icontains=quantity)
 
         serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)

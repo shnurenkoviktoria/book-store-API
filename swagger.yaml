@@ -44,6 +44,16 @@ paths:
           required: false
           schema:
             type: integer
+        - name: price
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: quantity
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
