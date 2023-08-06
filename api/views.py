@@ -6,7 +6,7 @@ from rest_framework import generics, viewsets, views, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from api.models import Author, Book, Order, MonoSettings
+from api.models import Author, Book, Order, MonoSettings, OrderItem
 from api.mono import create_order, verify_signature
 from api.permissions import IsAuthenticatedOrReadOnly
 from api.serializers import (
@@ -17,7 +17,6 @@ from api.serializers import (
     OrderModelSerializer,
     OrderSerializer,
     MonoCallbackSerializer,
-    OrderContentSerializer,
 )
 
 
@@ -151,5 +150,11 @@ class OrderCallbackView(views.APIView):
             return Response({"status": "invoiceId mismatch"}, status=400)
         order.status = callback.validated_data["status"]
         order.save()
+        id_order = order.id
+        id = OrderItem.objects.get(id=id_order)
+        book = Book.objects.get(id=id.book_id)
+        if order.status == "failure" or order.status == "expired" or order.status == "reversed" or order.status == "hold":
+            book.quantity += id.quantity
+            book.save()
 
-        return Response({"status": "ok"})
+        return Response({"status": order.status})

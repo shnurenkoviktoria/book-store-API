@@ -16,6 +16,8 @@ class TestBookAPI(unittest.TestCase):
             "author": 1,
             "genre": "Classic",
             "publication_date": "1925-04-10",
+            "price": "100.00",
+            "quantity": 10,
         }
         self.response = requests.post(url, json=self.data, headers=headers)
         self.book_id = self.response.json()["id"]
@@ -33,6 +35,8 @@ class TestBookAPI(unittest.TestCase):
         self.assertEqual(
             self.response.json()["publication_date"], self.data["publication_date"]
         )
+        self.assertEqual(self.response.json()["price"], self.data["price"])
+        self.assertEqual(self.response.json()["quantity"], self.data["quantity"])
         self.delete()
 
     def test_get_book_list(self):
@@ -57,6 +61,8 @@ class TestBookAPI(unittest.TestCase):
             "author": 1,
             "genre": "drama",
             "publication_date": "1925-04-10",
+            "price": "100.00",
+            "quantity": 10,
         }
         response = requests.put(url, json=data, headers=headers)
         self.assertEqual(response.status_code, 200)
@@ -66,6 +72,8 @@ class TestBookAPI(unittest.TestCase):
         self.assertEqual(
             response.json()["publication_date"], self.data["publication_date"]
         )
+        self.assertEqual(response.json()["price"], data["price"])
+        self.assertEqual(response.json()["quantity"], data["quantity"])
         self.delete()
 
     def test_delete_book(self):

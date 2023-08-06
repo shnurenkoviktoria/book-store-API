@@ -11,6 +11,10 @@ tags:
     description: Операції з книгами
   - name: authors
     description: Операції з авторами
+  - name: payment
+    description: Проведення оплати
+  - name: authentification
+    description: Аутентифікація
 paths:
   /books/:
     get:
@@ -256,6 +260,83 @@ paths:
           description: Автор видалений успішно
         '404':
           description: Автор не знайдений
+  /orders/:
+    get:
+      tags:
+        - payment
+      summary: Отримати список книг
+      description: Отримати список всіх книг у книгарні або книг, що відповідають заданим параметрам
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+  /order/:
+    post:
+      tags:
+        - payment
+      summary: Place order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+            examples:
+              "Buy one book with id 34":
+                value:
+                  order:
+                    [ { "book_id": 34, "quantity": 1 } ]
+              "Buy three books, one with id 4 and two with id 50":
+                value:
+                  order:
+                    [ { "book_id": 4, "quantity": 1 }, { "book_id": 50, "quantity": 2 } ]
+      responses:
+        "200":
+          description: Place order for a book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+  /users/register/:
+    post:
+      tags:
+        - authentification
+      summary: Реєстрація
+      description: Реєстрація нового юзера
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterInput'
+      responses:
+        '201':
+          description: Зеєстрація пройшла успішно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegister'
+  /users/token/:
+    post:
+      tags:
+        - authentification
+      summary: Отримання токена
+      description: Отримання токена для можливості публікувати, оновлювати та видаляти книги та авторів
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenInput'
+      responses:
+        '201':
+          description: Токен успішно створенний
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserToken'
 components:
   schemas:
     Book:
@@ -263,38 +344,132 @@ components:
       properties:
         id:
           type: integer
+          example: 1
         title:
           type: string
+          example: 'Гордість і упередження'
         author:
           $ref: '#/components/schemas/Author'
         genre:
           type: string
+          example: 'роман'
         publication_date:
           type: string
           format: date
+          example: '1813-08-01'
+        price:
+          type: integer
+          example: 50000
+        quantity:
+          type: integer
+          example: 246
     BookInput:
       type: object
       properties:
         title:
           type: string
+          example: 'Гордість і упередження'
         author:
           type: integer
+          example: 1
         genre:
           type: string
+          example: 'роман'
         publication_date:
           type: string
           format: date
+          example: '1813-08-01'
+        price:
+          type: integer
+          example: 50000
+        quantity:
+          type: integer
+          example: 246
+
     Author:
       type: object
       properties:
         id:
           type: integer
+          example: 1
         name:
           type: string
+          example: 'Джейн Остін'
     AuthorInput:
       type: object
       properties:
         name:
+          type: string
+          example: 'Джейн Остін'
+    Order:
+      type: object
+      required:
+        - order
+      properties:
+        order:
+          type: array
+          items:
+            type: object
+            required:
+              - book_id
+              - quantity
+            properties:
+              book_id:
+                type: integer
+              quantity:
+                type: integer
+    OrderResponse:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          example: 100
+    OrderList:
+      type: object
+      properties:
+        total_price:
+          type: integer
+          example: 80000
+        created_at:
+          type: string
+          example: "2023-08-01T16:43:53.505662Z"
+        invoice_id:
+          type: string
+          example: "2308012yKYfC7fhp4BKW"
+        id:
+          type: integer
+          example: 1
+        books:
+          $ref: '#/components/schemas/Book'
+        status:
+          type: string
+    UserRegisterInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserRegister:
+      type: object
+      properties:
+        username:
+          type: string
+    UserTokenInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserToken:
+      type: object
+      properties:
+        refresh:
+          type: string
+        access:
+          type: string
+        email:
           type: string
   securitySchemes:
     bearerAuth:

@@ -16,6 +16,8 @@ class BookTests(APITestCase):
             author=self.author,
             genre="Fiction",
             publication_date="2022-01-01",
+            price=10.00,
+            quantity=10,
         )
         self.user = User.objects.create_user(
             username="testuser", password="testpassword"
@@ -42,6 +44,8 @@ class BookTests(APITestCase):
             "genre": "Mystery",
             "publication_date": "2022-01-01",
             "author": self.author.id,
+            "price": "10.00",
+            "quantity": 10,
         }
         response = self.client.put(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -55,6 +59,8 @@ class BookTests(APITestCase):
             "author": self.author.id,
             "genre": "Fantasy",
             "publication_date": "2023-06-01",
+            "price": "10.00",
+            "quantity": 10,
         }
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
