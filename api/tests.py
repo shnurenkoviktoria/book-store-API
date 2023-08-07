@@ -12,13 +12,16 @@ from api.models import Book, Author
 def api_client():
     return APIClient()
 
+
 @pytest.fixture
 def user():
     return User.objects.create_user(username="testuser", password="testpassword")
 
+
 @pytest.fixture
 def access_token(user):
     return AccessToken.for_user(user)
+
 
 @pytest.fixture
 def authenticated_client(api_client, access_token):
@@ -26,9 +29,11 @@ def authenticated_client(api_client, access_token):
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
     return client
 
+
 @pytest.fixture
 def author():
     return Author.objects.create(name="John Doe")
+
 
 @pytest.fixture
 def book(author):
@@ -41,9 +46,9 @@ def book(author):
         quantity=10,
     )
 
+
 @pytest.mark.django_db
 class TestBookAPIViews:
-
     def test_get_all_books(self, authenticated_client, book):
         url = reverse("book-list")
         response = authenticated_client.get(url)
@@ -92,9 +97,9 @@ class TestBookAPIViews:
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert Book.objects.count() == 0
 
+
 @pytest.mark.django_db
 class TestAuthorAPIViews:
-
     def test_get_all_authors(self, authenticated_client, author):
         url = reverse("author-list")
         response = authenticated_client.get(url)
