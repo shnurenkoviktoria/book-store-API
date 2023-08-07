@@ -16,7 +16,11 @@ def create_order(order_data, webhook_url):
     order = Order.objects.create(total_price=0)
     for order_item in order_data:
         if order_item["quantity"] > order_item["book_id"].quantity:
-            return HttpResponseBadRequest("Not enough books in stock")
+            response_data = {
+                "message": "Not enough books in stock",
+                "status": 400,
+            }
+            return response_data
         else:
             order_item["book_id"].quantity -= order_item["quantity"]
             order_item["book_id"].save()
