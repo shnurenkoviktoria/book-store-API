@@ -1,7 +1,6 @@
 import base64
 import hashlib
-
-import Response
+from rest_framework.exceptions import ValidationError
 import ecdsa
 import requests
 from django.conf import settings
@@ -18,7 +17,7 @@ def create_order(order_data, webhook_url):
     order = Order.objects.create(total_price=0)
     for order_item in order_data:
         if order_item["quantity"] > order_item["book_id"].quantity:
-            return Response({"error": "Not enough books in stock"}, status=status.HTTP_400_BAD_REQUEST)
+            return ValidationError({"error": "Not enough books in stock"})
         else:
             order_item["book_id"].quantity -= order_item["quantity"]
             order_item["book_id"].save()
