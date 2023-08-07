@@ -128,9 +128,12 @@ class TestAuthorAPI:
             "name": f"F. Scott Fitzgerald",
         }
         response = requests.post(url, json=data, headers=create_author_headers)
+        author_id = response.json().get("id")
         assert response.status_code == 201
         assert "id" in response.json()
         assert response.json()["name"] == data["name"]
+        url_delete = urls(f"authors/delete/{author_id}/")
+        requests.delete(url_delete, headers=headers)
 
     def test_get_author_list(self, headers):
         url = urls("authors/")
