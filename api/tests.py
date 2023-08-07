@@ -1,11 +1,12 @@
 import pytest
+from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import AccessToken
+
 from api.models import Book, Author
 
-from rest_framework_simplejwt.tokens import AccessToken
 
 @pytest.fixture
 def api_client():
