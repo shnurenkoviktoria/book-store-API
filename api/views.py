@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -19,10 +18,6 @@ from api.serializers import (
     OrderSerializer,
     MonoCallbackSerializer,
 )
-
-
-def urls_page(request):
-    return render(request, "urls_page.html")
 
 
 class UserRegistrationView(generics.CreateAPIView):
