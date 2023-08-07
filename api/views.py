@@ -2,8 +2,9 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import generics, viewsets, views, permissions
+from rest_framework import generics, viewsets, views, permissions, filters
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.models import Author, Book, Order, MonoSettings, OrderItem
@@ -22,7 +23,7 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, 'urls_page.html')
+    return render(request, "urls_page.html")
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -37,16 +38,12 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class AuthorList(generics.ListAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [permissions.AllowAny]
+    pagination_class = LimitOffsetPagination
 
-    @method_decorator(cache_page(60 * 15))
-    def get(self, request, *args, **kwargs):
-        queryset = Author.objects.all()
-        name = self.request.query_params.get("name")
-        if name:
-            queryset = queryset.filter(name__icontains=name)
-
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["name", "id"]
+    ordering_fields = ["id", "name"]
 
 
 class AuthorCreate(generics.CreateAPIView):
@@ -75,32 +72,12 @@ class AuthorDelete(generics.DestroyAPIView):
 class BookList(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [permissions.AllowAny]
+    pagination_class = LimitOffsetPagination
 
-    @method_decorator(cache_page(60 * 15))
-    def get(self, request, *args, **kwargs):
-        queryset = Book.objects.all()
-        title = self.request.query_params.get("title")
-        author = self.request.query_params.get("author")
-        genre = self.request.query_params.get("genre")
-        publication_date = self.request.query_params.get("publication_date")
-        price = self.request.query_params.get("price")
-        quantity = self.request.query_params.get("quantity")
-
-        if title:
-            queryset = queryset.filter(title__icontains=title)
-        if author:
-            queryset = queryset.filter(author__name__icontains=author)
-        if genre:
-            queryset = queryset.filter(genre__icontains=genre)
-        if publication_date:
-            queryset = queryset.filter(publication_date__icontains=publication_date)
-        if price:
-            queryset = queryset.filter(price__icontains=price)
-        if quantity:
-            queryset = queryset.filter(quantity__icontains=quantity)
-
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["title", "id"]
+    ordering_fields = ["id", "price", "quantity", "publish_year", "genre"]
 
 
 class BookDetail(generics.RetrieveAPIView):
@@ -132,6 +109,11 @@ class OrdersViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all().order_by("-id")
     serializer_class = OrderModelSerializer
     permission_classes = [permissions.AllowAny]
+    pagination_class = LimitOffsetPagination
+
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["id", "status", "invoice_id"]
+    ordering_fields = ["id", "status", "invoice_id", "created_at", "total_price"]
 
 
 class OrderView(views.APIView):
@@ -151,7 +133,7 @@ class OrderCallbackView(views.APIView):
     def post(self, request):
         public_key = MonoSettings.get_token()
         if not verify_signature(
-                public_key, request.headers.get("X-Sign"), request.body
+            public_key, request.headers.get("X-Sign"), request.body
         ):
             return Response({"status": "signature mismatch"}, status=400)
         callback = MonoCallbackSerializer(data=request.data)
@@ -168,10 +150,10 @@ class OrderCallbackView(views.APIView):
         id = OrderItem.objects.get(id=id_order)
         book = Book.objects.get(id=id.book_id)
         if (
-                order.status == "failure"
-                or order.status == "expired"
-                or order.status == "reversed"
-                or order.status == "hold"
+            order.status == "failure"
+            or order.status == "expired"
+            or order.status == "reversed"
+            or order.status == "hold"
         ):
             book.quantity += id.quantity
             book.save()
