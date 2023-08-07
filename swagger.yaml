@@ -23,33 +23,20 @@ paths:
       summary: Отримати список книг
       description: Отримати список всіх книг у книгарні або книг, що відповідають заданим параметрам
       parameters:
-        - name: title
+        - name: ordering
+          description: Сортування (id, price, quantity,  publication_date, genre), також можно сортувати в зворотньому порядку, використовуючи параметри з "-" на початку
           in: query
           required: false
           schema:
             type: string
-        - name: genre
+        - name: search
+          description: Пошук (title, id)
           in: query
           required: false
           schema:
             type: string
-        - name: publication_date
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-        - name: author
-          in: query
-          required: false
-          schema:
-            type: integer
-        - name: price
-          in: query
-          required: false
-          schema:
-            type: integer
-        - name: quantity
+        - name: offset
+          description: Пагінація (Наприклад 10-19 - це друга сторінка, 20-29 - третя сторінка)
           in: query
           required: false
           schema:
@@ -163,11 +150,24 @@ paths:
       summary: Отримати список авторів
       description: Отримати список всіх авторів у книгарні або авторів, що відповідають заданим параметрам
       parameters:
-        - name: name
+        - name: ordering
+          description: Сортування(id, name), також можно сортувати в зворотньому порядку, використовуючи параметри з '-' на початку
           in: query
           required: false
           schema:
             type: string
+        - name: search
+          description: Пошук (id, name)
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          description: Пагінація (Наприклад 10-19 - це друга сторінка, 20-29 - третя сторінка)
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
@@ -276,6 +276,25 @@ paths:
         - payment
       summary: Отримати список книг
       description: Отримати список всіх книг у книгарні або книг, що відповідають заданим параметрам
+      parameters:
+        - name: ordering
+          description: Сортування(id, status, invoice_id, created_at, total_price), також можно сортувати в зворотньому порядку, використовуючи параметри з '-' на початку
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: search
+          description: Пошук (id, status, invoice_id)
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: offset
+          description: Пагінація (Наприклад 10-19 - це друга сторінка, 20-29 - третя сторінка)
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: OK
