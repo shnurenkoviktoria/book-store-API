@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -18,8 +19,6 @@ from api.serializers import (
     OrderSerializer,
     MonoCallbackSerializer,
 )
-from django.urls import reverse
-from django.shortcuts import render
 
 
 def urls_page(request):
