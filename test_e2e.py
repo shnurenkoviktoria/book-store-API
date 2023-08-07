@@ -55,6 +55,8 @@ class TestBookAPI:
             "quantity": 10,
         }
         response = requests.post(url, json=data, headers=create_book_headers)
+        book_id = response.json()["id"]
+
         assert response.status_code == 201
         assert "id" in response.json()
         assert response.json()["title"] == data["title"]
@@ -63,6 +65,8 @@ class TestBookAPI:
         assert response.json()["publication_date"] == data["publication_date"]
         assert response.json()["price"] == data["price"]
         assert response.json()["quantity"] == data["quantity"]
+        url_delete = urls(f"books/delete/{book_id}/")
+        requests.delete(url_delete, headers=headers)
 
     def test_get_book_list(self):
         url = urls("books/")

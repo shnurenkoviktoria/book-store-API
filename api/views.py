@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User
+from django.shortcuts import render
 from django.urls import reverse
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from rest_framework import generics, viewsets, views, permissions, filters
-from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api.models import Author, Book, Order, MonoSettings, OrderItem
@@ -19,7 +18,6 @@ from api.serializers import (
     OrderSerializer,
     MonoCallbackSerializer,
 )
-from django.shortcuts import render
 
 
 def home(request):
