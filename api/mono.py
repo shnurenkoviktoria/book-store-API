@@ -1,9 +1,11 @@
 import base64
 import hashlib
 
+
 import ecdsa
 import requests
 from django.conf import settings
+from rest_framework.response import Response
 
 from api.models import Order, OrderItem
 
@@ -15,11 +17,8 @@ def create_order(order_data, webhook_url):
     order = Order.objects.create(total_price=0)
     for order_item in order_data:
         if order_item["quantity"] > order_item["book_id"].quantity:
-            response_data = {
-                "error": "Not enough books in stock",
-                "status": 400,
-            }
-            return response_data
+            return Response({"status": "Not enough books in stock"}, status=400)
+
         else:
             order_item["book_id"].quantity -= order_item["quantity"]
             order_item["book_id"].save()

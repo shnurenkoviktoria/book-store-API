@@ -4,6 +4,7 @@ from api import views
 from api.views import OrderView, OrderCallbackView, OrdersViewSet
 
 urlpatterns = [
+    path("", views.all_links, name="all-links"),
     path("books/", views.BookList.as_view(), name="book-list"),
     path("books/<int:pk>/", views.BookDetail.as_view(), name="book-detail"),
     path("books/create/", views.BookCreate.as_view(), name="book-create"),

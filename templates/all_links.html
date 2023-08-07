@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Links</title>
+</head>
+<body>
+    <h1>All Links</h1>
+    <ul>
+        {% for link_text, link_url in links %}
+            <li><a href="{{ link_url }}">{{ link_text }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

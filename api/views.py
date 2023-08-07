@@ -18,6 +18,29 @@ from api.serializers import (
     OrderSerializer,
     MonoCallbackSerializer,
 )
+from django.urls import reverse
+from django.shortcuts import render
+
+
+def all_links(request):
+    links = [
+        ("Book List", reverse("book-list")),
+        ("Book Detail", reverse("book-detail", args=[1])),
+        ("Create Book", reverse("book-create")),
+        ("Update Book", reverse("book-update", args=[1])),
+        ("Delete Book", reverse("book-delete", args=[1])),
+        ("Create Author", reverse("authors-create")),
+        ("Author List", reverse("author-list")),
+        ("Author Detail", reverse("author-detail", args=[1])),
+        ("Update Author", reverse("author-update", args=[1])),
+        ("Delete Author", reverse("author-delete", args=[1])),
+        ("User Registration", reverse("user-register")),
+        ("Token Obtain Pair", reverse("token_obtain_pair")),
+        ("Order View", reverse("order")),
+        ("Monobank Callback", reverse("mono_callback")),
+        ("Orders List", reverse("orders")),
+    ]
+    return render(request, "all_links.html", {"links": links})
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -146,7 +169,7 @@ class OrderCallbackView(views.APIView):
     def post(self, request):
         public_key = MonoSettings.get_token()
         if not verify_signature(
-            public_key, request.headers.get("X-Sign"), request.body
+                public_key, request.headers.get("X-Sign"), request.body
         ):
             return Response({"status": "signature mismatch"}, status=400)
         callback = MonoCallbackSerializer(data=request.data)
@@ -163,10 +186,10 @@ class OrderCallbackView(views.APIView):
         id = OrderItem.objects.get(id=id_order)
         book = Book.objects.get(id=id.book_id)
         if (
-            order.status == "failure"
-            or order.status == "expired"
-            or order.status == "reversed"
-            or order.status == "hold"
+                order.status == "failure"
+                or order.status == "expired"
+                or order.status == "reversed"
+                or order.status == "hold"
         ):
             book.quantity += id.quantity
             book.save()
