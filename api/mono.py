@@ -20,8 +20,7 @@ def create_order(order_data, webhook_url):
             data = {
                 "error": "Not enough books in stock",
             }
-            response_data = json.dumps(data)
-            return HttpResponse(response_data, content_type="application/json", status=400)
+            return HttpResponse(data, status=400)
         else:
             order_item["book_id"].quantity -= order_item["quantity"]
             order_item["book_id"].save()
