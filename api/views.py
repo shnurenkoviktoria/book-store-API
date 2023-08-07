@@ -18,6 +18,11 @@ from api.serializers import (
     OrderSerializer,
     MonoCallbackSerializer,
 )
+from django.shortcuts import render
+
+
+def home(request):
+    return render(request, 'urls_page.html')
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -146,7 +151,7 @@ class OrderCallbackView(views.APIView):
     def post(self, request):
         public_key = MonoSettings.get_token()
         if not verify_signature(
-            public_key, request.headers.get("X-Sign"), request.body
+                public_key, request.headers.get("X-Sign"), request.body
         ):
             return Response({"status": "signature mismatch"}, status=400)
         callback = MonoCallbackSerializer(data=request.data)
@@ -163,10 +168,10 @@ class OrderCallbackView(views.APIView):
         id = OrderItem.objects.get(id=id_order)
         book = Book.objects.get(id=id.book_id)
         if (
-            order.status == "failure"
-            or order.status == "expired"
-            or order.status == "reversed"
-            or order.status == "hold"
+                order.status == "failure"
+                or order.status == "expired"
+                or order.status == "reversed"
+                or order.status == "hold"
         ):
             book.quantity += id.quantity
             book.save()
