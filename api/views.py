@@ -77,7 +77,7 @@ class BookList(generics.ListAPIView):
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title", "id"]
-    ordering_fields = ["id", "price", "quantity", "publish_year", "genre"]
+    ordering_fields = ["id", "price", "quantity", "publication_date", "genre"]
 
 
 class BookDetail(generics.RetrieveAPIView):
