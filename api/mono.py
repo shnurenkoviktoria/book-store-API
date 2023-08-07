@@ -1,6 +1,7 @@
 import base64
 import hashlib
-
+from rest_framework import status
+from rest_framework.response import Response
 import ecdsa
 import requests
 from django.conf import settings
@@ -17,12 +18,8 @@ def create_order(order_data, webhook_url):
 
     for order_item in order_data:
         if order_item["quantity"] > order_item["book_id"].quantity:
-            response_data = {
-                "error": "Not enough books in stock",
-                "status": 400,
-            }
-            return response_data
-
+            content = {'Not enough books in stock'}
+            return Response(content, status=status.HTTP_404_NOT_FOUND)
         else:
             order_item["book_id"].quantity -= order_item["quantity"]
             order_item["book_id"].save()
