@@ -4,7 +4,6 @@ import hashlib
 import ecdsa
 import requests
 from django.conf import settings
-from django.http import JsonResponse
 
 from api.models import Order, OrderItem
 
@@ -18,8 +17,9 @@ def create_order(order_data, webhook_url):
         if order_item["quantity"] > order_item["book_id"].quantity:
             response_data = {
                 "error": "Not enough books in stock",
+                "status": 400,
             }
-            return JsonResponse(response_data, status=400)
+            return response_data
         else:
             order_item["book_id"].quantity -= order_item["quantity"]
             order_item["book_id"].save()
